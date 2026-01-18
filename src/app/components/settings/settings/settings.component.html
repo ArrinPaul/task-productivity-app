@@ -1,0 +1,23 @@
+<div class="settings-container">
+  <h1>Settings</h1>
+  <mat-slide-toggle
+    [checked]="isDarkMode"
+    (change)="toggleTheme()">
+    Dark Mode
+  </mat-slide-toggle>
+
+  <div class="export-container">
+    <button mat-raised-button color="primary" (click)="exportToCsv()">
+      Export to CSV
+    </button>
+    <button mat-raised-button color="primary" (click)="exportToPdf()">
+      Export to PDF
+    </button>
+    <button mat-raised-button color="accent" (click)="backupData()">
+      Backup Data
+    </button>
+    <button mat-raised-button color="warn" (click)="openFileInput()">
+      Restore Data
+    </button>
+  </div>
+</div>

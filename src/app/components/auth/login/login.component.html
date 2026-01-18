@@ -1,0 +1,88 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-section">
+      <h1>Task Master Pro</h1>
+      <p class="subtitle">Your productivity companion</p>
+    </div>
+    
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <div class="input-wrapper">
+          <mat-icon class="input-icon">person_outline</mat-icon>
+          <input 
+            id="username"
+            type="text"
+            formControlName="username" 
+            placeholder="Enter your username"
+            autocomplete="username"
+            class="form-input">
+        </div>
+        @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
+          <span class="error-message">Username is required</span>
+        }
+        @if (loginForm.get('username')?.hasError('minlength')) {
+          <span class="error-message">Username must be at least 3 characters</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <mat-icon class="input-icon">lock_outline</mat-icon>
+          <input 
+            id="password"
+            [type]="hidePassword ? 'password' : 'text'" 
+            formControlName="password" 
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            class="form-input">
+          <button 
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()" 
+            [attr.aria-label]="'Toggle password visibility'">
+            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </div>
+        @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+          <span class="error-message">Password is required</span>
+        }
+        @if (loginForm.get('password')?.hasError('minlength')) {
+          <span class="error-message">Password must be at least 3 characters</span>
+        }
+      </div>
+
+      <button 
+        type="submit" 
+        class="login-button"
+        [disabled]="isLoading || loginForm.invalid">
+        @if (isLoading) {
+          <span class="button-content">
+            <mat-icon class="spinning">refresh</mat-icon>
+            Signing in...
+          </span>
+        } @else {
+          <span class="button-content">
+            Sign In
+            <mat-icon>arrow_forward</mat-icon>
+          </span>
+        }
+      </button>
+    </form>
+
+    <div class="demo-section">
+      <div class="demo-badge">Demo Credentials</div>
+      <div class="demo-content">
+        <div class="demo-item">
+          <span class="demo-label">Username</span>
+          <span class="demo-value">demo</span>
+        </div>
+        <div class="demo-item">
+          <span class="demo-label">Password</span>
+          <span class="demo-value">demo123</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

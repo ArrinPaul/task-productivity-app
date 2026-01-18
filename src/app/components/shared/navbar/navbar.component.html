@@ -1,0 +1,64 @@
+<mat-toolbar class="navbar">
+  <div class="nav-container">
+    <a routerLink="/dashboard" class="nav-brand">
+      <span class="app-name">Task Master Pro</span>
+    </a>
+
+    <nav class="nav-links">
+      <a mat-button routerLink="/dashboard" routerLinkActive="active-link">
+        <mat-icon>dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+      <a mat-button routerLink="/tasks" routerLinkActive="active-link">
+        <mat-icon>task_alt</mat-icon>
+        <span>Tasks</span>
+      </a>
+      <a mat-button routerLink="/kanban" routerLinkActive="active-link">
+        <mat-icon>view_kanban</mat-icon>
+        <span>Kanban</span>
+      </a>
+      <a mat-button routerLink="/calendar" routerLinkActive="active-link">
+        <mat-icon>calendar_month</mat-icon>
+        <span>Calendar</span>
+      </a>
+      <a mat-button routerLink="/categories" routerLinkActive="active-link">
+        <mat-icon>category</mat-icon>
+        <span>Categories</span>
+      </a>
+      <a mat-button routerLink="/performance" routerLinkActive="active-link">
+        <mat-icon>analytics</mat-icon>
+        <span>Performance</span>
+      </a>
+    </nav>
+
+    <div class="nav-actions">
+      <button mat-icon-button [matBadge]="notificationCount > 0 ? notificationCount : null" matBadgeColor="warn">
+        <mat-icon>notifications</mat-icon>
+      </button>
+      
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+      
+      <mat-menu #userMenu="matMenu">
+        @if (currentUser) {
+          <div class="user-info">
+            <p class="user-name">{{ currentUser.username }}</p>
+            @if (currentUser.email) {
+              <p class="user-email">{{ currentUser.email }}</p>
+            }
+          </div>
+          <mat-divider></mat-divider>
+        }
+        <button mat-menu-item routerLink="/settings">
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

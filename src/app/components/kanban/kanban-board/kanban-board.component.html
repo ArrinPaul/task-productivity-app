@@ -1,0 +1,47 @@
+<div class="kanban-board-container">
+  <h1>Kanban Board</h1>
+  <div class="kanban-board" cdkDropListGroup>
+    <div class="kanban-list">
+      <h2>To Do</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="todo"
+        class="kanban-list-content"
+        (cdkDropListDropped)="drop($event)">
+        @for (task of todo; track task.id) {
+          <div class="kanban-card" cdkDrag>
+            <mat-card>{{ task.title }}</mat-card>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="kanban-list">
+      <h2>In Progress</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="inProgress"
+        class="kanban-list-content"
+        (cdkDropListDropped)="drop($event)">
+        @for (task of inProgress; track task.id) {
+          <div class="kanban-card" cdkDrag>
+            <mat-card>{{ task.title }}</mat-card>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="kanban-list">
+      <h2>Done</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="done"
+        class="kanban-list-content"
+        (cdkDropListDropped)="drop($event)">
+        @for (task of done; track task.id) {
+          <div class="kanban-card" cdkDrag>
+            <mat-card>{{ task.title }}</mat-card>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>

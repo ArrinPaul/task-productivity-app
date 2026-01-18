@@ -1,0 +1,15 @@
+<div class="performance-container">
+  <h2>Monthly Performance</h2>
+  <div class="chart-container">
+    <ngx-charts-bar-vertical
+      [results]="monthlyPerformanceData"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      xAxisLabel="Month"
+      yAxisLabel="Completed Tasks">
+    </ngx-charts-bar-vertical>
+  </div>
+</div>

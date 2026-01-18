@@ -1,0 +1,32 @@
+.calendar-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--surface-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom styles for angular-calendar elements */
+:host ::ng-deep .cal-header {
+  background-color: var(--primary-color);
+  color: var(--surface-color);
+  padding: 1rem;
+  border-radius: 8px 8px 0 0;
+}
+
+:host ::ng-deep .cal-day-cell {
+  background-color: var(--surface-color);
+  border: 1px solid var(--background-color);
+}
+
+:host ::ng-deep .cal-today {
+  background-color: rgba(var(--accent-color), 0.1);
+}
+
+:host ::ng-deep .cal-event {
+  background-color: var(--accent-color);
+  color: var(--text-color);
+  font-weight: 500;
+  border-radius: 4px;
+}

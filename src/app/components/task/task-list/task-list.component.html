@@ -1,0 +1,75 @@
+<div class="task-list-container">
+  <div class="header">
+    <h1>Task List</h1>
+    <div class="filter-container">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by title</mat-label>
+        <input matInput [value]="searchTerm" (input)="onSearchChange($any($event.target).value)">
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Filter by category</mat-label>
+        <mat-select [value]="selectedCategory" (selectionChange)="onCategoryChange($event.value)">
+          <mat-option value="all">All</mat-option>
+          @for (category of categories; track category.id) {
+            <mat-option [value]="category.id">{{ category.name }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Filter by status</mat-label>
+        <mat-select [value]="selectedStatus" (selectionChange)="onFilterChange($event.value)">
+          <mat-option value="all">All</mat-option>
+          <mat-option value="pending">Pending</mat-option>
+          <mat-option value="completed">Completed</mat-option>
+          <mat-option value="overdue">Overdue</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" routerLink="/tasks/new">
+      <mat-icon>add</mat-icon>
+      New Task
+    </button>
+  </div>
+
+  <div class="task-list-content">
+    @if (filteredTasks.length > 0) {
+      <div class="task-cards">
+        @for (task of filteredTasks; track task.id) {
+          <mat-card class="task-card" [class.completed]="task.completed" [class.priority-High]="task.priority === 'High'"
+  [class.priority-Medium]="task.priority === 'Medium'" [class.priority-Low]="task.priority === 'Low'"
+  [routerLink]="['/tasks', task.id]">
+            <mat-card-header>
+              <mat-checkbox class="task-checkbox" [checked]="task.completed" (change)="toggleCompletion(task, $event.checked)"></mat-checkbox>
+              <mat-card-title>{{ task.title }}</mat-card-title>
+              <mat-card-subtitle>{{ task.priority }} Priority</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>{{ task.description }}</p>
+              <p><strong>Due:</strong> {{ task.dueDate | date: 'medium' }}</p>
+            </mat-card-content>
+            <mat-card-actions>
+              <button mat-icon-button [matMenuTriggerFor]="taskMenu" (click)="$event.stopPropagation()">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #taskMenu="matMenu">
+                <button mat-menu-item [routerLink]="['/tasks', task.id, 'edit']">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item (click)="deleteTask(task.id)">
+                  <mat-icon>delete</mat-icon>
+                  <span>Delete</span>
+                </button>
+              </mat-menu>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+    } @else {
+      <div class="no-tasks">
+        <p>No tasks found for the selected filter.</p>
+      </div>
+    }
+  </div>
+</div>
+

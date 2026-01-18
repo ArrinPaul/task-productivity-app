@@ -1,0 +1,45 @@
+[mat-dialog-title] {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+[mat-dialog-content] {
+  min-width: 400px;
+  margin-bottom: 1.5rem;
+  padding: 1.5rem 0;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+[mat-dialog-actions] {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+
+  button {
+    &:first-child {
+      color: var(--text-secondary);
+    }
+
+    &:last-child {
+      background-color: var(--primary-600) !important;
+      color: white !important;
+
+      &:hover:not(:disabled) {
+        background-color: var(--primary-700) !important;
+      }
+
+      &:disabled {
+        background-color: var(--slate-300) !important;
+      }
+    }
+  }
+}

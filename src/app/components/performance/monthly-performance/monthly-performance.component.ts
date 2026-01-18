@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { TaskService } from '../../../services/task.service';
+import { PerformanceService } from '../../../services/performance.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -14,24 +14,46 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class MonthlyPerformanceComponent implements OnInit {
   monthlyPerformanceData: any[] = [];
+  productivityByCategoryData: any[] = [];
+  productivityByPriorityData: any[] = [];
+  
+  // Chart configuration
+  view: [number, number] = [700, 300];
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Month';
+  showYAxisLabel = true;
+  yAxisLabel = 'Tasks Completed';
+  colorScheme = {
+    domain: ['#4f46e5', '#818cf8', '#a5b4fc', '#c7d2fe', '#6366f1', '#4338ca']
+  };
 
-  constructor(private taskService: TaskService) {}
+  constructor(private performanceService: PerformanceService) {}
 
   ngOnInit(): void {
-    this.taskService.getTasks().subscribe(tasks => {
-      const monthlyData = this.calculateMonthlyPerformance(tasks);
-      this.monthlyPerformanceData = monthlyData;
+    this.loadMonthlyPerformance();
+    this.loadProductivityByCategory();
+    this.loadProductivityByPriority();
+  }
+
+  private loadMonthlyPerformance(): void {
+    this.performanceService.getMonthlyPerformance().subscribe(data => {
+      this.monthlyPerformanceData = data;
     });
   }
 
-  calculateMonthlyPerformance(tasks: any[]): any[] {
-    // This is a mock implementation. A real implementation would involve more complex logic.
-    const data = [
-      { name: 'Jan', value: 50 },
-      { name: 'Feb', value: 60 },
-      { name: 'Mar', value: 55 },
-      { name: 'Apr', value: 70 }
-    ];
-    return data;
+  private loadProductivityByCategory(): void {
+    this.performanceService.getProductivityByCategory().subscribe(data => {
+      this.productivityByCategoryData = data;
+    });
+  }
+
+  private loadProductivityByPriority(): void {
+    this.performanceService.getProductivityByPriority().subscribe(data => {
+      this.productivityByPriorityData = data;
+    });
   }
 }

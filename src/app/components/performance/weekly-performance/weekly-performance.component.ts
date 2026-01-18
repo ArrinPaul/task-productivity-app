@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { TaskService } from '../../../services/task.service';
+import { PerformanceService } from '../../../services/performance.service';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -14,24 +14,38 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class WeeklyPerformanceComponent implements OnInit {
   weeklyPerformanceData: any[] = [];
+  dailyPerformanceData: any[] = [];
+  
+  // Chart configuration
+  view: [number, number] = [700, 300];
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = false;
+  showXAxisLabel = true;
+  xAxisLabel = 'Week';
+  showYAxisLabel = true;
+  yAxisLabel = 'Tasks Completed';
+  colorScheme = {
+    domain: ['#4f46e5', '#818cf8', '#a5b4fc', '#c7d2fe']
+  };
 
-  constructor(private taskService: TaskService) {}
+  constructor(private performanceService: PerformanceService) {}
 
   ngOnInit(): void {
-    this.taskService.getTasks().subscribe(tasks => {
-      const weeklyData = this.calculateWeeklyPerformance(tasks);
-      this.weeklyPerformanceData = weeklyData;
+    this.loadWeeklyPerformance();
+    this.loadDailyPerformance();
+  }
+
+  private loadWeeklyPerformance(): void {
+    this.performanceService.getWeeklyPerformance().subscribe(data => {
+      this.weeklyPerformanceData = data;
     });
   }
 
-  calculateWeeklyPerformance(tasks: any[]): any[] {
-    // This is a mock implementation. A real implementation would involve more complex logic.
-    const data = [
-      { name: 'Week 1', value: 10 },
-      { name: 'Week 2', value: 15 },
-      { name: 'Week 3', value: 12 },
-      { name: 'Week 4', value: 18 }
-    ];
-    return data;
+  private loadDailyPerformance(): void {
+    this.performanceService.getDailyPerformance().subscribe(data => {
+      this.dailyPerformanceData = data;
+    });
   }
 }

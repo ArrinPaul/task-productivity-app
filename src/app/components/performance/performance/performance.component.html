@@ -1,10 +1,93 @@
 <div class="performance-container">
-  <h1>Performance</h1>
-  <mat-tab-group>
-    <mat-tab label="Weekly">
+  <h1>Performance Analytics</h1>
+  
+  <!-- Performance Stats Overview -->
+  @if (stats) {
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon">
+            <mat-icon>task_alt</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>Total Tasks</h3>
+            <p class="stat-value">{{ stats.totalTasks }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon completed">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>Completed</h3>
+            <p class="stat-value">{{ stats.completedTasks }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon pending">
+            <mat-icon>pending</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>Pending</h3>
+            <p class="stat-value">{{ stats.pendingTasks }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon overdue">
+            <mat-icon>warning</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>Overdue</h3>
+            <p class="stat-value">{{ stats.overdueTasks }}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon rate">
+            <mat-icon>pie_chart</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>Completion Rate</h3>
+            <p class="stat-value">{{ stats.completionRate }}%</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <mat-card-content>
+          <div class="stat-icon" [class]="getTrendClass()">
+            <mat-icon>{{ getTrendIcon() }}</mat-icon>
+          </div>
+          <div class="stat-info">
+            <h3>30-Day Trend</h3>
+            <p class="stat-value">
+              @if (trend) {
+                {{ trend.current }} tasks
+              }
+            </p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
+  
+  <!-- Charts Tabs -->
+  <mat-tab-group class="performance-tabs">
+    <mat-tab label="Weekly Analysis">
       <app-weekly-performance></app-weekly-performance>
     </mat-tab>
-    <mat-tab label="Monthly">
+    <mat-tab label="Monthly Analysis">
       <app-monthly-performance></app-monthly-performance>
     </mat-tab>
   </mat-tab-group>

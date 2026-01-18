@@ -1,15 +1,104 @@
 <div class="performance-container">
   <h2>Monthly Performance</h2>
-  <div class="chart-container">
-    <ngx-charts-bar-vertical
-      [results]="monthlyPerformanceData"
-      [xAxis]="true"
-      [yAxis]="true"
-      [legend]="true"
-      [showXAxisLabel]="true"
-      [showYAxisLabel]="true"
-      xAxisLabel="Month"
-      yAxisLabel="Completed Tasks">
-    </ngx-charts-bar-vertical>
+  
+  <div class="charts-grid">
+    <!-- Last 6 Months Performance -->
+    <mat-card class="chart-card full-width">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>calendar_today</mat-icon>
+          Last 6 Months Progress
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          @if (monthlyPerformanceData.length > 0) {
+            <ngx-charts-bar-vertical
+              [results]="monthlyPerformanceData"
+              [view]="[1000, 300]"
+              [xAxis]="showXAxis"
+              [yAxis]="showYAxis"
+              [gradient]="gradient"
+              [legend]="showLegend"
+              [showXAxisLabel]="showXAxisLabel"
+              [showYAxisLabel]="showYAxisLabel"
+              [xAxisLabel]="xAxisLabel"
+              [yAxisLabel]="yAxisLabel"
+              [scheme]="colorScheme">
+            </ngx-charts-bar-vertical>
+          } @else {
+            <div class="no-data">
+              <mat-icon>bar_chart</mat-icon>
+              <p>No completed tasks in the last 6 months</p>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Productivity by Category -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>category</mat-icon>
+          Tasks by Category
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          @if (productivityByCategoryData.length > 0) {
+            <ngx-charts-pie-chart
+              [results]="productivityByCategoryData"
+              [view]="view"
+              [gradient]="gradient"
+              [legend]="showLegend"
+              [legendPosition]="'below'"
+              [labels]="true"
+              [doughnut]="true"
+              [scheme]="colorScheme">
+            </ngx-charts-pie-chart>
+          } @else {
+            <div class="no-data">
+              <mat-icon>pie_chart</mat-icon>
+              <p>No category data available</p>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Productivity by Priority -->
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>priority_high</mat-icon>
+          Tasks by Priority
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="chart-container">
+          @if (productivityByPriorityData.length > 0) {
+            <ngx-charts-bar-horizontal
+              [results]="productivityByPriorityData"
+              [view]="view"
+              [xAxis]="showXAxis"
+              [yAxis]="showYAxis"
+              [gradient]="gradient"
+              [legend]="showLegend"
+              [showXAxisLabel]="showXAxisLabel"
+              [showYAxisLabel]="showYAxisLabel"
+              [xAxisLabel]="'Tasks Completed'"
+              [yAxisLabel]="'Priority'"
+              [scheme]="colorScheme">
+            </ngx-charts-bar-horizontal>
+          } @else {
+            <div class="no-data">
+              <mat-icon>bar_chart</mat-icon>
+              <p>No priority data available</p>
+            </div>
+          }
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>

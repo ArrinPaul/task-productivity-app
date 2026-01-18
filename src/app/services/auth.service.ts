@@ -24,15 +24,16 @@ export class AuthService {
 
   // Initialize auth state from storage
   private initializeAuth(): void {
-    const savedAuthState = this.storageService.getItem<AuthState>(this.STORAGE_KEY);
-    if (savedAuthState && savedAuthState.isAuthenticated) {
+    const savedAuthState = this.storageService.getGlobalItem<AuthState>(this.STORAGE_KEY);
+    if (savedAuthState && savedAuthState.isAuthenticated && savedAuthState.user) {
+      this.storageService.setCurrentUserId(savedAuthState.user.id);
       this.authStateSubject.next(savedAuthState);
     }
   }
 
   // Seed default user for demo
   private seedDefaultUser(): void {
-    const users = this.storageService.getItem<User[]>(this.USERS_KEY);
+    const users = this.storageService.getGlobalItem<User[]>(this.USERS_KEY);
     if (!users || users.length === 0) {
       const defaultUser: User = {
         id: 1,
@@ -41,23 +42,26 @@ export class AuthService {
         password: 'demo123',
         createdDate: new Date()
       };
-      this.storageService.setItem(this.USERS_KEY, [defaultUser]);
+      this.storageService.setGlobalItem(this.USERS_KEY, [defaultUser]);
     }
   }
 
   // Login
   login(username: string, password: string): Observable<boolean> {
     return new Observable(observer => {
-      const users = this.storageService.getItem<User[]>(this.USERS_KEY) || [];
+      const users = this.storageService.getGlobalItem<User[]>(this.USERS_KEY) || [];
       const user = users.find(u => u.username === username && u.password === password);
 
       if (user) {
+        // Set current user ID in storage service
+        this.storageService.setCurrentUserId(user.id);
+        
         const authState: AuthState = {
           isAuthenticated: true,
           user: { ...user, password: '' }, // Don't store password in state
           token: this.generateToken()
         };
-        this.storageService.setItem(this.STORAGE_KEY, authState);
+        this.storageService.setGlobalItem(this.STORAGE_KEY, authState);
         this.authStateSubject.next(authState);
         observer.next(true);
       } else {
@@ -68,19 +72,26 @@ export class AuthService {
   }
 
   // Register new user
-  register(username: string, email: string, password: string): Observable<boolean> {
+  register(username: string, email: string, password: string): Observable<{ success: boolean; message: string }> {
     return new Observable(observer => {
-      const users = this.storageService.getItem<User[]>(this.USERS_KEY) || [];
+      const users = this.storageService.getGlobalItem<User[]>(this.USERS_KEY) || [];
       
       // Check if username already exists
       if (users.some(u => u.username === username)) {
-        observer.next(false);
+        observer.next({ success: false, message: 'Username already exists' });
+        observer.complete();
+        return;
+      }
+
+      // Check if email already exists
+      if (email && users.some(u => u.email === email)) {
+        observer.next({ success: false, message: 'Email already registered' });
         observer.complete();
         return;
       }
 
       const newUser: User = {
-        id: users.length + 1,
+        id: users.length > 0 ? Math.max(...users.map(u => u.id)) + 1 : 1,
         username,
         email,
         password,
@@ -88,8 +99,8 @@ export class AuthService {
       };
 
       users.push(newUser);
-      this.storageService.setItem(this.USERS_KEY, users);
-      observer.next(true);
+      this.storageService.setGlobalItem(this.USERS_KEY, users);
+      observer.next({ success: true, message: 'Account created successfully' });
       observer.complete();
     });
   }
@@ -100,6 +111,7 @@ export class AuthService {
       isAuthenticated: false,
       user: null
     };
+    this.storageService.setCurrentUserId(null);
     this.storageService.removeItem(this.STORAGE_KEY);
     this.authStateSubject.next(authState);
   }

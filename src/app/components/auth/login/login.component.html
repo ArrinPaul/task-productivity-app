@@ -5,84 +5,225 @@
       <p class="subtitle">Your productivity companion</p>
     </div>
     
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
-      <div class="form-group">
-        <label for="username">Username</label>
-        <div class="input-wrapper">
-          <mat-icon class="input-icon">person_outline</mat-icon>
-          <input 
-            id="username"
-            type="text"
-            formControlName="username" 
-            placeholder="Enter your username"
-            autocomplete="username"
-            class="form-input">
+    <!-- Login Form -->
+    @if (!isRegisterMode) {
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">person_outline</mat-icon>
+            <input 
+              id="username"
+              type="text"
+              formControlName="username" 
+              placeholder="Enter your username"
+              autocomplete="username"
+              class="form-input">
+          </div>
+          @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
+            <span class="error-message">Username is required</span>
+          }
+          @if (loginForm.get('username')?.hasError('minlength')) {
+            <span class="error-message">Username must be at least 3 characters</span>
+          }
         </div>
-        @if (loginForm.get('username')?.hasError('required') && loginForm.get('username')?.touched) {
-          <span class="error-message">Username is required</span>
-        }
-        @if (loginForm.get('username')?.hasError('minlength')) {
-          <span class="error-message">Username must be at least 3 characters</span>
-        }
-      </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="input-wrapper">
-          <mat-icon class="input-icon">lock_outline</mat-icon>
-          <input 
-            id="password"
-            [type]="hidePassword ? 'password' : 'text'" 
-            formControlName="password" 
-            placeholder="Enter your password"
-            autocomplete="current-password"
-            class="form-input">
-          <button 
-            type="button"
-            class="toggle-password"
-            (click)="togglePasswordVisibility()" 
-            [attr.aria-label]="'Toggle password visibility'">
-            <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">lock_outline</mat-icon>
+            <input 
+              id="password"
+              [type]="hidePassword ? 'password' : 'text'" 
+              formControlName="password" 
+              placeholder="Enter your password"
+              autocomplete="current-password"
+              class="form-input">
+            <button 
+              type="button"
+              class="toggle-password"
+              (click)="togglePasswordVisibility()" 
+              [attr.aria-label]="'Toggle password visibility'">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+          @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
+            <span class="error-message">Password is required</span>
+          }
+          @if (loginForm.get('password')?.hasError('minlength')) {
+            <span class="error-message">Password must be at least 3 characters</span>
+          }
+        </div>
+
+        <button 
+          type="submit" 
+          class="login-button"
+          [disabled]="isLoading || loginForm.invalid">
+          @if (isLoading) {
+            <span class="button-content">
+              <mat-icon class="spinning">refresh</mat-icon>
+              Signing in...
+            </span>
+          } @else {
+            <span class="button-content">
+              Sign In
+              <mat-icon>arrow_forward</mat-icon>
+            </span>
+          }
+        </button>
+      </form>
+    }
+
+    <!-- Registration Form -->
+    @if (isRegisterMode) {
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="reg-username">Username</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">person_outline</mat-icon>
+            <input 
+              id="reg-username"
+              type="text"
+              formControlName="username" 
+              placeholder="Choose a username"
+              autocomplete="username"
+              class="form-input">
+          </div>
+          @if (registerForm.get('username')?.hasError('required') && registerForm.get('username')?.touched) {
+            <span class="error-message">Username is required</span>
+          }
+          @if (registerForm.get('username')?.hasError('minlength')) {
+            <span class="error-message">Username must be at least 3 characters</span>
+          }
+          @if (registerForm.get('username')?.hasError('maxlength')) {
+            <span class="error-message">Username must be at most 20 characters</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">email_outline</mat-icon>
+            <input 
+              id="email"
+              type="email"
+              formControlName="email" 
+              placeholder="Enter your email"
+              autocomplete="email"
+              class="form-input">
+          </div>
+          @if (registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched) {
+            <span class="error-message">Email is required</span>
+          }
+          @if (registerForm.get('email')?.hasError('email')) {
+            <span class="error-message">Please enter a valid email</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">lock_outline</mat-icon>
+            <input 
+              id="reg-password"
+              [type]="hidePassword ? 'password' : 'text'" 
+              formControlName="password" 
+              placeholder="Create a password"
+              autocomplete="new-password"
+              class="form-input">
+            <button 
+              type="button"
+              class="toggle-password"
+              (click)="togglePasswordVisibility()" 
+              [attr.aria-label]="'Toggle password visibility'">
+              <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+          @if (registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched) {
+            <span class="error-message">Password is required</span>
+          }
+          @if (registerForm.get('password')?.hasError('minlength')) {
+            <span class="error-message">Password must be at least 6 characters</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password</label>
+          <div class="input-wrapper">
+            <mat-icon class="input-icon">lock_outline</mat-icon>
+            <input 
+              id="confirm-password"
+              [type]="hideConfirmPassword ? 'password' : 'text'" 
+              formControlName="confirmPassword" 
+              placeholder="Confirm your password"
+              autocomplete="new-password"
+              class="form-input">
+            <button 
+              type="button"
+              class="toggle-password"
+              (click)="hideConfirmPassword = !hideConfirmPassword" 
+              [attr.aria-label]="'Toggle password visibility'">
+              <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+          </div>
+          @if (registerForm.get('confirmPassword')?.hasError('required') && registerForm.get('confirmPassword')?.touched) {
+            <span class="error-message">Please confirm your password</span>
+          }
+          @if (registerForm.hasError('passwordMismatch') && registerForm.get('confirmPassword')?.touched) {
+            <span class="error-message">Passwords do not match</span>
+          }
+        </div>
+
+        <button 
+          type="submit" 
+          class="login-button"
+          [disabled]="isLoading || registerForm.invalid">
+          @if (isLoading) {
+            <span class="button-content">
+              <mat-icon class="spinning">refresh</mat-icon>
+              Creating account...
+            </span>
+          } @else {
+            <span class="button-content">
+              Create Account
+              <mat-icon>arrow_forward</mat-icon>
+            </span>
+          }
+        </button>
+      </form>
+    }
+
+    <!-- Toggle between login and register -->
+    <div class="toggle-mode">
+      @if (!isRegisterMode) {
+        <p>Don't have an account? 
+          <button type="button" class="link-button" (click)="toggleMode()">
+            Create one
           </button>
-        </div>
-        @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
-          <span class="error-message">Password is required</span>
-        }
-        @if (loginForm.get('password')?.hasError('minlength')) {
-          <span class="error-message">Password must be at least 3 characters</span>
-        }
-      </div>
-
-      <button 
-        type="submit" 
-        class="login-button"
-        [disabled]="isLoading || loginForm.invalid">
-        @if (isLoading) {
-          <span class="button-content">
-            <mat-icon class="spinning">refresh</mat-icon>
-            Signing in...
-          </span>
-        } @else {
-          <span class="button-content">
-            Sign In
-            <mat-icon>arrow_forward</mat-icon>
-          </span>
-        }
-      </button>
-    </form>
-
-    <div class="demo-section">
-      <div class="demo-badge">Demo Credentials</div>
-      <div class="demo-content">
-        <div class="demo-item">
-          <span class="demo-label">Username</span>
-          <span class="demo-value">demo</span>
-        </div>
-        <div class="demo-item">
-          <span class="demo-label">Password</span>
-          <span class="demo-value">demo123</span>
-        </div>
-      </div>
+        </p>
+      } @else {
+        <p>Already have an account? 
+          <button type="button" class="link-button" (click)="toggleMode()">
+            Sign in
+          </button>
+        </p>
+      }
     </div>
+
+    @if (!isRegisterMode) {
+      <div class="demo-section">
+        <div class="demo-badge">Demo Credentials</div>
+        <div class="demo-content">
+          <div class="demo-item">
+            <span class="demo-label">Username</span>
+            <span class="demo-value">demo</span>
+          </div>
+          <div class="demo-item">
+            <span class="demo-label">Password</span>
+            <span class="demo-value">demo123</span>
+          </div>
+        </div>
+      </div>
+    }
   </div>
 </div>

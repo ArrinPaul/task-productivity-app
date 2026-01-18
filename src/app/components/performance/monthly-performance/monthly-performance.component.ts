@@ -27,7 +27,7 @@ export class MonthlyPerformanceComponent implements OnInit {
   xAxisLabel = 'Month';
   showYAxisLabel = true;
   yAxisLabel = 'Tasks Completed';
-  colorScheme = {
+  colorScheme: any = {
     domain: ['#4f46e5', '#818cf8', '#a5b4fc', '#c7d2fe', '#6366f1', '#4338ca']
   };
 

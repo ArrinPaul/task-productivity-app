@@ -26,7 +26,7 @@ export class WeeklyPerformanceComponent implements OnInit {
   xAxisLabel = 'Week';
   showYAxisLabel = true;
   yAxisLabel = 'Tasks Completed';
-  colorScheme = {
+  colorScheme: any = {
     domain: ['#4f46e5', '#818cf8', '#a5b4fc', '#c7d2fe']
   };
 

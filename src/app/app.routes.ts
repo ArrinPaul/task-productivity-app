@@ -29,12 +29,23 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   {
+    path: 'tasks/completed',
+    component: TaskListComponent,
+    canActivate: [authGuard],
+    data: { status: 'completed' }
+  },
+  {
     path: 'tasks/new',
     component: TaskFormComponent,
     canActivate: [authGuard]
   },
   {
     path: 'tasks/:id',
+    component: TaskDetailComponent,
+    canActivate: [authGuard]
+  },
+  {
+    path: 'task/:id',
     component: TaskDetailComponent,
     canActivate: [authGuard]
   },

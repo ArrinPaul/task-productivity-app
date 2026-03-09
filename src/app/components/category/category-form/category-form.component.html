@@ -1,13 +1,25 @@
 <h1 mat-dialog-title>{{ data ? 'Edit Category' : 'Add Category' }}</h1>
 <div mat-dialog-content>
-  <form [formGroup]="form">
+  <form #categoryForm="ngForm" (ngSubmit)="save(categoryForm)">
     <mat-form-field appearance="outline">
       <mat-label>Category Name</mat-label>
-      <input matInput formControlName="name" cdkFocusInitial>
+      <input
+        matInput
+        cdkFocusInitial
+        name="name"
+        [(ngModel)]="categoryName"
+        #nameCtrl="ngModel"
+        required
+        minlength="2"
+        maxlength="30">
+      @if (nameCtrl.invalid && nameCtrl.touched) {
+        <mat-error>Enter a category name between 2 and 30 characters.</mat-error>
+      }
     </mat-form-field>
+    <button type="submit" style="display: none"></button>
   </form>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-button (click)="save()" [disabled]="form.invalid">Save</button>
+  <button mat-button (click)="save(categoryForm)" [disabled]="categoryForm.invalid">Save</button>
 </div>

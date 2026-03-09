@@ -56,14 +56,26 @@ export class TaskFormComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.taskForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-      dueDate: ['', Validators.required],
+      title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(80)]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(300)]],
+      dueDate: ['', [Validators.required, this.futureDateValidator]],
       priority: ['Medium', Validators.required],
       category: ['', Validators.required],
       tags: [[]]
     });
   }
+
+  private futureDateValidator = (control: { value: Date | string | null }): { [key: string]: boolean } | null => {
+    if (!control.value) {
+      return null;
+    }
+
+    const selectedDate = new Date(control.value);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+
+    return selectedDate < now ? { pastDate: true } : null;
+  };
 
   ngOnInit(): void {
     this.taskId = this.route.snapshot.paramMap.get('id');
@@ -75,8 +87,12 @@ export class TaskFormComponent implements OnInit {
       this.isEditMode = true;
       this.taskService.getTask(this.taskId).subscribe(task => {
         if (task) {
-          this.taskForm.patchValue(task);
-          this.taskForm.setControl('tags', this.fb.array(task.tags || []));
+          this.taskForm.patchValue({
+            ...task,
+            category: task.category,
+            dueDate: new Date(task.dueDate),
+            tags: task.tags || []
+          });
         }
       });
     }
@@ -87,9 +103,11 @@ export class TaskFormComponent implements OnInit {
     const value = event.value;
 
     if ((value || '').trim()) {
-      const tags = this.taskForm.get('tags')?.value;
-      tags.push(value.trim());
-      this.taskForm.get('tags')?.setValue(tags);
+      const tags = [...(this.taskForm.get('tags')?.value || [])];
+      if (!tags.includes(value.trim())) {
+        tags.push(value.trim());
+        this.taskForm.get('tags')?.setValue(tags);
+      }
     }
 
     if (input) {
@@ -98,7 +116,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   remove(tag: string): void {
-    const tags = this.taskForm.get('tags')?.value;
+    const tags = [...(this.taskForm.get('tags')?.value || [])];
     const index = tags.indexOf(tag);
 
     if (index >= 0) {
@@ -109,7 +127,10 @@ export class TaskFormComponent implements OnInit {
 
   saveTask(): void {
     if (this.taskForm.valid) {
-      const taskData: Task = { ...this.taskForm.value, id: this.taskId ? parseInt(this.taskId, 10) : 0 };
+      const taskData: Task = {
+        ...this.taskForm.value,
+        id: this.taskId ? parseInt(this.taskId, 10) : 0
+      };
       if (this.isEditMode && this.taskId) {
         this.taskService.updateTask(taskData).subscribe(() => {
           this.snackBar.open('Task updated successfully', 'Close', { duration: 3000 });
@@ -121,6 +142,8 @@ export class TaskFormComponent implements OnInit {
           this.router.navigate(['/tasks']);
         });
       }
+    } else {
+      this.taskForm.markAllAsTouched();
     }
   }
 

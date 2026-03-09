@@ -1,32 +1,142 @@
 .calendar-container {
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 1500px;
   margin: 0 auto;
-  background-color: var(--surface-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.calendar-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 1.25rem;
+}
+
+.calendar-main,
+.day-panel {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-color);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.1rem;
+}
+
+.period-controls,
+.view-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.active-view {
+  background: rgb(15 118 110 / 0.15);
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.calendar-surface {
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgb(255 255 255 / 0.85);
+}
+
+.day-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.day-task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0.6rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+    background: var(--surface-hover);
+  }
+}
+
+.task-meta {
+  min-width: 0;
+  flex: 1;
+}
+
+.task-title {
+  margin: 0;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-subtitle {
+  margin: 0;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+mat-chip.high {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+mat-chip.medium {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+mat-chip.low {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.empty-state {
+  color: var(--text-muted);
+  margin: 0;
 }
 
 /* Custom styles for angular-calendar elements */
 :host ::ng-deep .cal-header {
-  background-color: var(--primary-color);
-  color: var(--surface-color);
-  padding: 1rem;
-  border-radius: 8px 8px 0 0;
+  background-color: #e9f6f4;
+  color: var(--text-primary);
 }
 
 :host ::ng-deep .cal-day-cell {
-  background-color: var(--surface-color);
-  border: 1px solid var(--background-color);
+  background-color: rgb(255 255 255 / 0.84);
+  border-color: var(--border-color);
 }
 
 :host ::ng-deep .cal-today {
-  background-color: rgba(var(--accent-color), 0.1);
+  background-color: rgb(15 118 110 / 0.12);
 }
 
 :host ::ng-deep .cal-event {
-  background-color: var(--accent-color);
-  color: var(--text-color);
+  color: #102027;
   font-weight: 500;
   border-radius: 4px;
+}
+
+@media (max-width: 1120px) {
+  .calendar-shell {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-container {
+    padding: 1rem;
+  }
 }

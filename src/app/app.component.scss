@@ -1,13 +1,13 @@
 :host {
   display: block;
   min-height: 100vh;
-  background: var(--bg-primary);
+  background: var(--background-color);
 }
 
 ::ng-deep {
-  // Override Material colors to match dark theme
+  // Keep Material surfaces aligned with the active theme.
   .mat-mdc-card {
-    background-color: var(--bg-secondary) !important;
+    background-color: var(--surface-color) !important;
     color: var(--text-primary) !important;
   }
   
@@ -20,6 +20,6 @@
   }
   
   .mdc-text-field--filled {
-    background-color: var(--bg-tertiary) !important;
+    background-color: var(--surface-hover) !important;
   }
 }
